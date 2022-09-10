@@ -20,6 +20,8 @@ import IconSpock from "../public/images/icon-spock.svg";
 
 interface PlayAgainProps {
   show: boolean,
+  delay: boolean,
+  setDelay: (delay: boolean) => void,
   showFn: (show: boolean) => void,
   computerOption: string,
   selectedValue: string,
@@ -129,7 +131,7 @@ const UserSelected = ({ selected, showValue }: { selected: string, showValue: bo
   }
 }
 
-const PlayAgain = ({ show, showFn, computerOption, selectedValue, resultBroadcast, setResultBroadcast, score, setScore }: PlayAgainProps) => {
+const PlayAgain = ({ show, showFn, computerOption, selectedValue, resultBroadcast, setResultBroadcast, score, setScore, delay, setDelay }: PlayAgainProps) => {
 
 
 
@@ -162,15 +164,16 @@ const PlayAgain = ({ show, showFn, computerOption, selectedValue, resultBroadcas
 
   const _st = () => {
     showFn(!show);
+    setDelay(!delay);
   }
 
 
 
 
   return (
-    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute bottom-[6rem] md:relative md:bottom-[0rem] transition ease-linear duration-500 `}>
-      <p className='text-white font-extrabold upppercase text-[3.5rem]'>{resultBroadcast}</p>
-      <button className={`text-center uppercase rounded bg-white ${resultBroadcast==="YOU WIN !" ? "text-black":"text-red-500" }  px-[2rem]  py-[0.5rem] text-[1.5rem]`} onClick={_st}>Play Again</button>
+    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute bottom-[5.5rem] md:relative md:bottom-[0rem] transition ease-linear duration-500 `}>
+      <p className='text-white font-extrabold upppercase text-[3rem]'>{resultBroadcast}</p>
+      <button className={`text-center uppercase rounded bg-white ${resultBroadcast === "YOU WIN !" ? "text-black" : "text-red-500"}  px-[2rem]  py-[0.5rem] text-[1.2rem]`} onClick={_st}>Play Again</button>
     </div>
   )
 
@@ -223,6 +226,8 @@ const Home: NextPage = () => {
   const [showNormal, setShowNormal] = useState<boolean>(false);
   const [computerOption, setComputerOption] = useState<string>("");
   const [resultBroadcast, setResultBroadcast] = useState<string>("");
+  const [delay, setDelay] = useState<boolean>(true);
+  const [advancedDelay, setAdvancedDelay] = useState<boolean>(true);
 
 
   const computationAdvanced = ["paper", "rock", "spock", "lizard", "scissors"];
@@ -251,6 +256,8 @@ const Home: NextPage = () => {
     setShowNormal(!showNormal);
 
     generateRandom(computationNormal);
+
+    setTimeout(() => { setDelay(prev => !prev) }, 4000);
   }
 
   const handleAdvancedSelected = (event: any) => {
@@ -258,6 +265,8 @@ const Home: NextPage = () => {
     setShowAdvanced(!showAdvanced);
 
     generateRandom(computationAdvanced);
+    setTimeout(() => { setAdvancedDelay(prev => !prev) }, 4000);
+
   }
 
 
@@ -360,27 +369,58 @@ const Home: NextPage = () => {
 
                 <div className={`${showAdvanced ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] transition ease-linear duration-500 `}>
 
-                  <UserSelected
-                    selected={advancedSelected}
-                    showValue={showAdvanced}
-                  />
-
-                  <PlayAgain
-                    show={showAdvanced}
-                    showFn={setShowAdvanced}
-                    computerOption={computerOption}
-                    selectedValue={advancedSelected}
-                    resultBroadcast={resultBroadcast}
-                    setResultBroadcast={setResultBroadcast}
-                    score={score}
-                    setScore={setScore}
-                  />
+                  <div className='flex justify-center items-center flex-col'>
+                    <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex'>you picked</p>
+                    <UserSelected
+                      selected={advancedSelected}
+                      showValue={showAdvanced}
+                    />
+                    <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>you picked</p>
+                  </div>
 
 
-                  <UserSelected
-                    selected={computerOption}
-                    showValue={showAdvanced}
-                  />
+                  {
+                    !advancedDelay && (
+                      <PlayAgain
+                        show={showAdvanced}
+                        showFn={setShowAdvanced}
+                        computerOption={computerOption}
+                        selectedValue={advancedSelected}
+                        resultBroadcast={resultBroadcast}
+                        setResultBroadcast={setResultBroadcast}
+                        score={score}
+                        setScore={setScore}
+                        delay={advancedDelay}
+                        setDelay={setAdvancedDelay}
+                      />
+
+                    )
+                  }
+
+                  <div className='flex justify-center items-center flex-col'>
+                    <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex'>the house picked</p>
+
+                    {
+                      advancedDelay && (
+                        <div className={`w-[8rem] h-[8rem] rounded-full relative bg-blue-300 md:w-[13rem] md:h-[13rem] animate-bounce `}></div>
+
+                      )
+                    }
+
+                    {
+                      !advancedDelay && (
+                        <UserSelected
+                          selected={computerOption}
+                          showValue={showAdvanced}
+                        />
+
+                      )
+                    }
+
+
+                    <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>the house picked</p>
+
+                  </div>
 
 
                 </div>
@@ -460,24 +500,50 @@ const Home: NextPage = () => {
                     <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>you picked</p>
                   </div>
 
-                  <PlayAgain
-                    show={showNormal}
-                    showFn={setShowNormal}
-                    computerOption={computerOption}
-                    selectedValue={normalSelected}
-                    resultBroadcast={resultBroadcast}
-                    setResultBroadcast={setResultBroadcast}
-                    score={score}
-                    setScore={setScore}
-                  />
+                  {
+
+                    !delay && (
+                      <PlayAgain
+                        show={showNormal}
+                        showFn={setShowNormal}
+                        computerOption={computerOption}
+                        selectedValue={normalSelected}
+                        resultBroadcast={resultBroadcast}
+                        setResultBroadcast={setResultBroadcast}
+                        score={score}
+                        setScore={setScore}
+                        delay={delay}
+                        setDelay={setDelay}
+                      />
+
+                    )
+
+                  }
 
                   <div className='flex justify-center items-center flex-col'>
-                    <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex '>the house picked</p>
-                    <UserSelected
-                      selected={computerOption}
-                      showValue={showNormal}
-                    />
-                    <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>the house picked</p>
+                    {
+                      delay && (
+                        <div className={`w-[8rem] h-[8rem] rounded-full relative bg-blue-300 md:w-[13rem] md:h-[13rem] animate-bounce `}></div>
+                      )
+                    }
+
+                    {
+                      !delay && (
+                        <>
+                          <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex '>the house picked</p>
+
+                          <UserSelected
+                            selected={computerOption}
+                            showValue={showNormal}
+                          />
+
+                          <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>the house picked</p>
+                        </>
+
+                      )
+                    }
+
+
                   </div>
 
 
