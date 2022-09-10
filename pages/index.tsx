@@ -58,7 +58,7 @@ const Rules = ({ showRules, handleShowRules, advancedMode }: { showRules: Boolea
 const ScoreBoard = ({ advancedMode, score }: { advancedMode: Boolean, score: number }) => {
 
   return (
-    <div className='flex justify-center items-center w-full mb-[1rem]'>
+    <div className='flex justify-center items-center w-full mb-[1rem] '>
 
       <div className='w-[80%] mx-auto border-4 border-headerOutline rounded flex justify-between items-center p-2 px-4 mt-[1rem] md:w-[60%]'>
         <div className='w-[45%] relative'>
@@ -81,7 +81,7 @@ const ScoreBoard = ({ advancedMode, score }: { advancedMode: Boolean, score: num
 
 const ButtonGroup = ({ handleShowRules, handleAdvancedMode, advancedMode }: { handleShowRules: () => void, handleAdvancedMode: () => void, advancedMode: Boolean }) => {
   return (
-    <div className='w-full absolute -bottom-[8rem] '>
+    <div className='w-full absolute bottom-[0.5rem] '>
       <div className='flex justify-between items-center mx-auto w-[80%] '>
         <button className='border-2 border-white text-white text-lg w-[130px] p-2 text-center whitespace-nowrap' onClick={handleAdvancedMode}> {advancedMode ? "Advanced Mode" : "Normal Mode"}</button>
         <button className='border-2 border-white text-white text-lg w-[120px] p-2' onClick={handleShowRules}>Rules</button>
@@ -169,7 +169,7 @@ const PlayAgain = ({ show, showFn, computerOption, setComputerOption, selectedVa
 
 
   return (
-    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute -bottom-2 md:relative `}>
+    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute bottom-[6rem] md:relative `}>
       <p className='text-white font-extrabold upppercase text-[3.5rem]'>{resultBroadcast}</p>
       <button className='text-center uppercase rounded bg-white text-black px-[2rem]  py-[0.5rem] text-[1.5rem]' onClick={_st}>Play Again</button>
     </div>
@@ -182,8 +182,8 @@ const PlayAgain = ({ show, showFn, computerOption, setComputerOption, selectedVa
 
 const AdvancedCircle = ({ handleAdvancedSelected, lightColor, darkColor, bgImg, value }: { handleAdvancedSelected: (event: any) => void, lightColor: string, darkColor: string, bgImg: string, value: string }) => {
   return (
-    <div className={`w-[8rem] h-[8rem] rounded-full shadow-lg relative overflow-hidden bg-${lightColor} hover:scale-110 transition ease-linear duration-500`} >
-      <div className={`w-[8rem] h-[8rem] rounded-full absolute transform top-[47%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-${darkColor}`}></div>
+    <div className={`w-[8rem] h-[8rem] rounded-full shadow-lg relative overflow-hidden ${lightColor} hover:scale-110 transition ease-linear duration-500`} >
+      <div className={`w-[8rem] h-[8rem] rounded-full absolute transform top-[47%] left-[50%] -translate-x-[50%] -translate-y-[50%] ${darkColor}`}></div>
       <div className='w-[6rem] h-[6rem] rounded-full shadow-lg overflow-hidden absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-darkInnerBackground hover:scale-100 transition ease-linear duration-500 '>
         <div className='w-[6rem] h-[6rem] rounded-full shadow-lg overflow-hidden absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[47%] bg-lightInnerBackground' >
         </div>
@@ -197,8 +197,8 @@ const AdvancedCircle = ({ handleAdvancedSelected, lightColor, darkColor, bgImg, 
 
 const NormalCircle = ({ handleNormalSelected, lightColor, darkColor, bgImg, value }: { handleNormalSelected: (event: any) => void, lightColor: string, darkColor: string, bgImg: string, value: string }) => {
   return (
-    <div className={`w-[8rem] h-[8rem] rounded-full shadow-lg relative overflow-hidden bg-${lightColor} md:w-[10rem] md:h-[10rem] hover:scale-110 transition ease duration-500`} >
-      <div className={`w-[8rem] h-[8rem] rounded-full absolute transform top-[47%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-${darkColor} md:w-[10rem] md:h-[10rem]`}></div>
+    <div className={`w-[8rem] h-[8rem] rounded-full shadow-lg relative overflow-hidden ${lightColor} md:w-[10rem] md:h-[10rem] hover:scale-110 transition ease duration-500`} >
+      <div className={`w-[8rem] h-[8rem] rounded-full absolute transform top-[47%] left-[50%] -translate-x-[50%] -translate-y-[50%] ${darkColor} md:w-[10rem] md:h-[10rem]`}></div>
       <div className='w-[6rem] h-[6rem] rounded-full shadow-lg overflow-hidden absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-darkInnerBackground md:w-[8rem] md:h-[8rem] hover:scale-100 transition ease-linear duration-500 '>
         <div className='w-[6rem] h-[6rem] rounded-full shadow-lg reltive overflow-hidden absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[47%] bg-lightInnerBackground md:w-[8rem] md:h-[8rem]' >
         </div>
@@ -250,6 +250,8 @@ const Home: NextPage = () => {
   const handleNormalSelected = (event: any) => {
     setNormalSelected(event.target.getAttribute('data-value'));
     setShowNormal(!showNormal);
+
+    generateRandom(computationNormal);
   }
 
   const handleAdvancedSelected = (event: any) => {
@@ -260,9 +262,11 @@ const Home: NextPage = () => {
   }
 
 
+  console.log(normalSelected);
+  console.log(computerOption);
 
   return (
-    <div className='w-full relative'>
+    <div className='w-full relative min-h-[100vh]'>
       <Head>
         <title>Rock-Paper-scissors-Lizard-Spock</title>
         <meta name="description" content="Generated by create next app" />
@@ -285,7 +289,7 @@ const Home: NextPage = () => {
                 {/* ___________________START PENTAGON STRUCTURE ____________ */}
 
                 <div className={`${showAdvanced ? "hidden" : "flex"}`}>
-                  <div className={`w-[300px] mx-auto flex justify-center items-center min-h-[70vh] relative md:w-[400px] `}>
+                  <div className={`w-[300px] mx-auto flex justify-center items-center min-h-[70vh] relative md:w-[400px]`}>
 
                     {/* ______BACKGROUND IMAGE --START ______ */}
                     <div className='w-full mx-auto relative flex justify-center items-center '>
@@ -299,8 +303,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -top-[4rem] left-[5.5rem] md:left-[8.5rem]`}>
                         <AdvancedCircle
                           handleAdvancedSelected={handleAdvancedSelected}
-                          lightColor={"scissors"}
-                          darkColor={"darkScissors"}
+                          lightColor="bg-scissors"
+                          darkColor="bg-darkScissors"
                           bgImg={IconScissors}
                           value="scissors"
                         />
@@ -310,8 +314,8 @@ const Home: NextPage = () => {
                       <div className={`absolute top-[3rem] -right-[2rem] `}>
                         <AdvancedCircle
                           handleAdvancedSelected={handleAdvancedSelected}
-                          lightColor="paper"
-                          darkColor="darkPaper"
+                          lightColor="bg-paper"
+                          darkColor="bg-darkPaper"
                           bgImg={IconPaper}
                           value="paper"
                         />
@@ -321,8 +325,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -bottom-[2.7rem] -right-[0rem]`}>
                         <AdvancedCircle
                           handleAdvancedSelected={handleAdvancedSelected}
-                          lightColor="rock"
-                          darkColor="darkRock"
+                          lightColor="bg-rock"
+                          darkColor="bg-darkRock"
                           bgImg={IconRock}
                           value="rock"
                         />
@@ -331,8 +335,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -bottom-[2.7rem] -left-[0rem]`}>
                         <AdvancedCircle
                           handleAdvancedSelected={handleAdvancedSelected}
-                          lightColor="lizard"
-                          darkColor="darkLizard"
+                          lightColor="bg-lizard"
+                          darkColor="bg-darkLizard"
                           bgImg={IconLizard}
                           value="lizard"
                         />
@@ -341,8 +345,8 @@ const Home: NextPage = () => {
                       <div className={`absolute top-[3rem] -left-[2rem]`}>
                         <AdvancedCircle
                           handleAdvancedSelected={handleAdvancedSelected}
-                          lightColor="cyan"
-                          darkColor="darkCyan"
+                          lightColor="bg-cyan"
+                          darkColor="bg-darkCyan"
                           bgImg={IconSpock}
                           value="spock"
                         />
@@ -413,8 +417,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -top-[3rem] -left-[3rem] md:-left-[2rem]`}>
                         <NormalCircle
                           handleNormalSelected={handleNormalSelected}
-                          lightColor="paper"
-                          darkColor="darkPaper"
+                          lightColor="bg-paper"
+                          darkColor="bg-darkPaper"
                           bgImg={IconPaper}
                           value="paper"
                         />
@@ -423,8 +427,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -top-[3rem] -right-[3rem] md:right-[2rem]`}>
                         <NormalCircle
                           handleNormalSelected={handleNormalSelected}
-                          lightColor="scissors"
-                          darkColor="darkScissors"
+                          lightColor="bg-scissors"
+                          darkColor="bg-darkScissors"
                           bgImg={IconScissors}
                           value="scissors"
                         />
@@ -433,8 +437,8 @@ const Home: NextPage = () => {
                       <div className={`absolute -bottom-[2.5rem] left-[25%] md:left-[20%]`}>
                         <NormalCircle
                           handleNormalSelected={handleNormalSelected}
-                          lightColor="rock"
-                          darkColor="darkRock"
+                          lightColor="bg-rock"
+                          darkColor="bg-darkRock"
                           bgImg={IconRock}
                           value="rock"
                         />
@@ -447,6 +451,35 @@ const Home: NextPage = () => {
                 </div>
 
                 {/* ___________________ TRIANGLE STRUCTURE --END ______________ */}
+
+
+                <div className={`${showNormal ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] `}>
+
+                  <UserSelected
+                    selected={normalSelected}
+                    showValue={showNormal}
+                  />
+
+                  <PlayAgain
+                    show={showNormal}
+                    showFn={setShowNormal}
+                    computerOption={computerOption}
+                    setComputerOption={setComputerOption}
+                    selectedValue={normalSelected}
+                    resultBroadcast={resultBroadcast}
+                    setResultBroadcast={setResultBroadcast}
+                    score={score}
+                    setScore={setScore}
+                  />
+
+
+                  <UserSelected
+                    selected={computerOption}
+                    showValue={showNormal}
+                  />
+
+
+                </div>
 
 
 
