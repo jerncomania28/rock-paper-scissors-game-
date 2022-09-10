@@ -22,7 +22,6 @@ interface PlayAgainProps {
   show: boolean,
   showFn: (show: boolean) => void,
   computerOption: string,
-  setComputerOption: (computerOption: string) => void,
   selectedValue: string,
   resultBroadcast: string,
   setResultBroadcast: (string: string) => void,
@@ -58,7 +57,7 @@ const Rules = ({ showRules, handleShowRules, advancedMode }: { showRules: Boolea
 const ScoreBoard = ({ advancedMode, score }: { advancedMode: Boolean, score: number }) => {
 
   return (
-    <div className='flex justify-center items-center w-full mb-[1rem] '>
+    <div className='flex justify-center items-center w-full mb-[1rem] transition ease-linear duration-500'>
 
       <div className='w-[80%] mx-auto border-4 border-headerOutline rounded flex justify-between items-center p-2 px-4 mt-[1rem] md:w-[60%]'>
         <div className='w-[45%] relative'>
@@ -93,7 +92,7 @@ const ButtonGroup = ({ handleShowRules, handleAdvancedMode, advancedMode }: { ha
 
 const ResultStage = ({ lightColor, darkColor, bgImg, show }: { lightColor: string, darkColor: string, bgImg: string, show: boolean }) => {
   return (
-    <div className={`${show ? "flex" : "hidden"}`}>
+    <div className={`${show ? "flex" : "hidden"} transition ease-linear duration-500`}>
       <div className={`w-[8rem] h-[8rem] rounded-full shadow-lg relative overflow-hidden bg-${lightColor} md:w-[13rem] md:h-[13rem] hover:scale-110 transition ease-linear duration-500`} >
         <div className={`w-[8rem] h-[8rem] rounded-full absolute transform top-[47%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-${darkColor} md:w-[13rem] md:h-[13rem]`}></div>
         <div className='w-[6rem] h-[6rem] rounded-full shadow-lg overflow-hidden absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-darkInnerBackground md:w-[10rem] md:h-[10rem] hover:scale-100 transition ease-linear duration-500 '>
@@ -130,7 +129,7 @@ const UserSelected = ({ selected, showValue }: { selected: string, showValue: bo
   }
 }
 
-const PlayAgain = ({ show, showFn, computerOption, setComputerOption, selectedValue, resultBroadcast, setResultBroadcast, score, setScore }: PlayAgainProps) => {
+const PlayAgain = ({ show, showFn, computerOption, selectedValue, resultBroadcast, setResultBroadcast, score, setScore }: PlayAgainProps) => {
 
 
 
@@ -169,9 +168,9 @@ const PlayAgain = ({ show, showFn, computerOption, setComputerOption, selectedVa
 
 
   return (
-    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute bottom-[6rem] md:relative `}>
+    <div className={`${show ? "flex" : "hidden"} justify-center items-center flex-col absolute bottom-[6rem] md:relative md:bottom-[0rem] transition ease-linear duration-500 `}>
       <p className='text-white font-extrabold upppercase text-[3.5rem]'>{resultBroadcast}</p>
-      <button className='text-center uppercase rounded bg-white text-black px-[2rem]  py-[0.5rem] text-[1.5rem]' onClick={_st}>Play Again</button>
+      <button className={`text-center uppercase rounded bg-white ${resultBroadcast==="YOU WIN !" ? "text-black":"text-red-500" }  px-[2rem]  py-[0.5rem] text-[1.5rem]`} onClick={_st}>Play Again</button>
     </div>
   )
 
@@ -261,9 +260,6 @@ const Home: NextPage = () => {
     generateRandom(computationAdvanced);
   }
 
-
-  console.log(normalSelected);
-  console.log(computerOption);
 
   return (
     <div className='w-full relative min-h-[100vh]'>
@@ -362,7 +358,7 @@ const Home: NextPage = () => {
                 {/* ___________________END PENTAGON STRUCTURE ____________ */}
 
 
-                <div className={`${showAdvanced ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] `}>
+                <div className={`${showAdvanced ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] transition ease-linear duration-500 `}>
 
                   <UserSelected
                     selected={advancedSelected}
@@ -373,7 +369,6 @@ const Home: NextPage = () => {
                     show={showAdvanced}
                     showFn={setShowAdvanced}
                     computerOption={computerOption}
-                    setComputerOption={setComputerOption}
                     selectedValue={advancedSelected}
                     resultBroadcast={resultBroadcast}
                     setResultBroadcast={setResultBroadcast}
@@ -453,18 +448,22 @@ const Home: NextPage = () => {
                 {/* ___________________ TRIANGLE STRUCTURE --END ______________ */}
 
 
-                <div className={`${showNormal ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] `}>
+                <div className={`${showNormal ? "flex" : "hidden"} justify-around items-center w-full min-h-[60vh] mx-auto md:w-[70%] transition ease-linear duration-500 `}>
 
-                  <UserSelected
-                    selected={normalSelected}
-                    showValue={showNormal}
-                  />
+
+                  <div className='flex justify-center items-center flex-col'>
+                    <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex'>you picked</p>
+                    <UserSelected
+                      selected={normalSelected}
+                      showValue={showNormal}
+                    />
+                    <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>you picked</p>
+                  </div>
 
                   <PlayAgain
                     show={showNormal}
                     showFn={setShowNormal}
                     computerOption={computerOption}
-                    setComputerOption={setComputerOption}
                     selectedValue={normalSelected}
                     resultBroadcast={resultBroadcast}
                     setResultBroadcast={setResultBroadcast}
@@ -472,11 +471,14 @@ const Home: NextPage = () => {
                     setScore={setScore}
                   />
 
-
-                  <UserSelected
-                    selected={computerOption}
-                    showValue={showNormal}
-                  />
+                  <div className='flex justify-center items-center flex-col'>
+                    <p className='hidden uppercase text-white text-[1rem] leading-10 mb-3 md:flex '>the house picked</p>
+                    <UserSelected
+                      selected={computerOption}
+                      showValue={showNormal}
+                    />
+                    <p className='flex uppercase text-white text-[1rem] leading-10 mt-3 md:hidden'>the house picked</p>
+                  </div>
 
 
                 </div>
